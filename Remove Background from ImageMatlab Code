@@ -1,0 +1,67 @@
+%%DSP PROJECT
+%%PROJECT TITLE: REMOVING BACKGROUND FROM IMAGE
+
+
+
+%% Basic Steps of the Code are:
+%%                (i)  Reading the Input Image
+%%                 (ii) Convert to Gray 
+%%                 (iii) Thresholding
+%%                 (iv) Masking
+%%                 (v) Morphology
+%%                 (vii) Anti-Aliasing the edges
+%%                 (viii) Inserting an Alpha Channel
+%%                 (ix) Saving the Results
+
+
+
+
+
+% loading image in matlab
+x = imread('nnn.jpg');
+figure(1)
+imshow(x);
+
+
+%Converting to gray scale
+x_g = rgb2gray(x);
+figure(2)
+imshow(x_g)
+
+
+%Thresholding
+level = graythresh(x_g);
+BW = imbinarize(x_g, level+0.2);
+figure(3)
+imshowpair(x_g,BW,'Montage')
+
+
+% Inverting a Mask
+J = imcomplement(BW);
+figure(4)
+imshowpair(BW,J,'Montage')
+
+
+% EROSION
+SE = strel('line',1,90);
+E = imerode(J,SE);
+figure(5)
+imshow(E)
+
+ 
+%Anti-Alias the edges
+windowSize = 51;
+kernal = ones(windowSize)/ windowSize^2;
+blurryImage = conv2(single(E),kernal,'same');
+binaryImage=blurryImage>0.5
+figure(6)
+imshow(binaryImage);
+
+
+[X, map] = gray2ind(binaryImage,16);
+RGB = ind2rgb(X,map);
+figure(7);
+y = im2double(x);
+h = RGB.*y; 
+imshow(h);
+%% END
