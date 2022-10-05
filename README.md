@@ -1,2 +1,2 @@
 # Remove-Background-from-Image
-This project if for Digital Signal Processing
+This project is for Digital Signal Processing
